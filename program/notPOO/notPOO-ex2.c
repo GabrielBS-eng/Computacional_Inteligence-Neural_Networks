@@ -243,16 +243,21 @@ void printNeuron(struct neuron *n)
 
 int main()
 {
-  int i,j,k;
+  int i,j,k,nr;
   int array[31];
   int result=0;
   int error;
-  struct neuron n;
-  struct neuron *p = &n;
   int count=0;
 
-  setNeuronWeights(p, DEFAULT_WEIGHT);
-  printNeuron(p);
+  struct neuron n[2];
+  struct neuron *p[2];
+  p[0] = &n[0];
+  p[1] = &n[1];
+
+  setNeuronWeights(p[0], DEFAULT_WEIGHT);
+  printNeuron(p[0]);
+  setNeuronWeights(p[1], DEFAULT_WEIGHT);
+  printNeuron(p[1]);
   do
   {
     error = 0;
@@ -260,27 +265,38 @@ int main()
     {
       setArray(array, i);
 
-      for(j=0;j<31;j++) result += n.weight[j]*array[j];
-
-      if(result >= 1) result = 1;
-      else result = 0;
-
-      if(result > i)
+      for(nr=0;nr<2;nr++)
       {
-        error++;
-        for(k=0; k<31; k++) n.weight[k] = n.weight[k] - array[k];
-      }
+        for(j=0;j<31;j++) result += n[nr].weight[j]*array[j];
 
-      if(result < i)
-      {
-        error++;
-        for(k=0; k<31; k++) n.weight[k] = n.weight[k] + array[k];
+        if(result >= 1) result = 1;
+        else result = 0;
+
+        if(nr==i)
+        {
+          if(result < 1)
+          {
+            error++;
+            for(k=0; k<31; k++) n[nr].weight[k] = n[nr].weight[k] + array[k];
+          }
+        }
+        else
+        {
+          if(result > 0)
+          {
+            error++;
+            for(k=0; k<31; k++) n[nr].weight[k] = n[nr].weight[k] - array[k];
+          }
+        }
+        count++;
       }
     }
-    count++;
   }while(error!=0);
+
+
   printf("\n %d TIMES",count);
-  printNeuron(p);
+  printNeuron(p[0]);
+  printNeuron(p[1]);
 
   return 0;
 }

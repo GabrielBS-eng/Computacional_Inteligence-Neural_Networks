@@ -243,44 +243,77 @@ void printNeuron(struct neuron *n)
 
 int main()
 {
-  int i,j,k;
+  int i,j,k,nr;
   int array[31];
   int result=0;
   int error;
-  struct neuron n;
-  struct neuron *p = &n;
   int count=0;
 
-  setNeuronWeights(p, DEFAULT_WEIGHT);
-  printNeuron(p);
+  struct neuron n[6];
+  struct neuron *p[6];
+  p[0] = &n[0];
+  p[1] = &n[1];
+  p[2] = &n[2];
+  p[3] = &n[3];
+  p[4] = &n[4];
+  p[5] = &n[5];
+
+  setNeuronWeights(p[0], DEFAULT_WEIGHT);
+  printNeuron(p[0]);
+  setNeuronWeights(p[1], DEFAULT_WEIGHT);
+  printNeuron(p[1]);
+  setNeuronWeights(p[2], DEFAULT_WEIGHT);
+  printNeuron(p[2]);
+  setNeuronWeights(p[3], DEFAULT_WEIGHT);
+  printNeuron(p[3]);
+  setNeuronWeights(p[4], DEFAULT_WEIGHT);
+  printNeuron(p[4]);
+  setNeuronWeights(p[5], DEFAULT_WEIGHT);
+  printNeuron(p[5]);
+
   do
   {
     error = 0;
-    for(i=0;i<2;i++)
+    for(i=0;i<6;i++)
     {
       setArray(array, i);
 
-      for(j=0;j<31;j++) result += n.weight[j]*array[j];
-
-      if(result >= 1) result = 1;
-      else result = 0;
-
-      if(result > i)
+      for(nr=0;nr<6;nr++)
       {
-        error++;
-        for(k=0; k<31; k++) n.weight[k] = n.weight[k] - array[k];
-      }
+        for(j=0;j<31;j++) result += n[nr].weight[j]*array[j];
 
-      if(result < i)
-      {
-        error++;
-        for(k=0; k<31; k++) n.weight[k] = n.weight[k] + array[k];
+        if(result >= 1) result = 1;
+        else result = 0;
+
+        if(nr==i)
+        {
+          if(result < 1)
+          {
+            error++;
+            for(k=0; k<31; k++) n[nr].weight[k] = n[nr].weight[k] + array[k];
+          }
+        }
+        else
+        {
+          if(result > 0)
+          {
+            error++;
+            for(k=0; k<31; k++) n[nr].weight[k] = n[nr].weight[k] - array[k];
+          }
+        }
+        count++;
       }
     }
-    count++;
   }while(error!=0);
+
+
   printf("\n %d TIMES",count);
-  printNeuron(p);
+  printNeuron(p[0]);
+  printNeuron(p[1]);
+  printNeuron(p[2]);
+  printNeuron(p[3]);
+  printNeuron(p[4]);
+  printNeuron(p[5]);
 
   return 0;
 }
