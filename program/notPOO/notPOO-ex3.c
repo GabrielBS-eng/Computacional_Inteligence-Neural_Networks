@@ -3,7 +3,7 @@
 #include <time.h>
 #include <math.h>
 
-#define DEFAULT_WEIGHT 0
+#define DEFAULT_WEIGHT 0 //RANDOM IF -1
 
 typedef struct neuron
 {
@@ -224,20 +224,39 @@ void setArray(int array[], int set)
 
 void setNeuronWeights(struct neuron *n, int set)
 {
-  printf("valor pra setar: %d\n", set);
-  int i;
-  for(i=0;i<31;i++)
+  srand(1);
+  if(set==-1)
   {
-    n->weight[i] = set;
-    printf("%d ",n->weight[i]);
+    printf("valor pra setar: %d\n", set);
+    int i;
+    for(i=0;i<31;i++)
+    {
+      n->weight[i] = (1-(rand()%3));
+      printf("%d ",n->weight[i]);
+    }
+  }
+  else
+  {
+    printf("valor pra setar: %d\n", set);
+    int i;
+    for(i=0;i<31;i++)
+    {
+      n->weight[i] = set;
+      printf("%d ",n->weight[i]);
+    }
   }
 }
 
 void printNeuron(struct neuron *n)
 {
   int i;
-  printf("\nNeuron Weights: ");
-  for(i=0;i<31;i++) printf("%d ",n->weight[i]);
+  printf("\nNeuron Weights: \n");
+  printf("Bias: %d\n\t",n->weight[0]);
+  for(i=1;i<31;i++)
+  {
+    printf("%d ",n->weight[i]);
+    if(i==5||i==10||i==15||i==20||i==25||i==30) printf("\n\t");
+  }
   printf("\n");
 }
 
